@@ -1,0 +1,6 @@
+require 'smartclient_rails/arel/case-sensitive-like.rb'
+require 'smartclient_rails/arel/regular-expressions.rb'
+require 'smartclient_rails/params'
+require 'smartclient_rails/responder'
+require 'smartclient_rails/criteria'
+require 'smartclient_rails/railtie'

@@ -1,0 +1,11 @@
+source 'http://rubygems.org'
+
+gem 'rails'
+gem 'sqlite3-ruby', :require => 'sqlite3'
+gem 'smartclient_rails', :path => ".."
+
+group :development, :test do
+  gem 'rspec-rails'
+  gem 'factory_girl_rails'
+  gem 'forgery'
+end
