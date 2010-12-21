@@ -21,7 +21,7 @@ private
 
   # Massage the isc_metadata
   def check_isc_metadata
-    if params(:format) == "isc"
+    if params[:format] == "isc"
       @isc_metadata = HashWithIndifferentAccess.new
       check_isc_get_requests
       check_isc_put_and_post_requests
