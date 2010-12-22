@@ -58,27 +58,33 @@ ActionController::Responder.class_eval do
         xml.response do
           # For fetches, if we get this far, the status is always good ...
           xml.status 0
+
           # We count the total rows from the ActiveRelation
           resource_count = resource.count # We cache it ...
           xml.totalRows resource_count
+
           # We get a reference to the resource, because we're going to want to add some filters ...
           filtered_resource = resource
-          # Apply the start row if present ... note the deliberate assignment in the if statement
-          if start_row = controller.isc_metadata[:startRow].to_i
-            xml.startRow start_row
-            filtered_resource = filtered_resource.offset(start_row)
-          end
-          # Apply the end row if present ... again, the assignment is deliberate in the if statement
+
+          # Apply the start row if present
+          #
           # Note that the semantics of startRow and endRow are as follows:
           # -- both are zero based
           # -- the startRow is included in the result set
           # -- the endRow is *not* included in the result set
+          #
           # So, the "typical" startRow of 0 and endRow of 75 means to return the first 75 records
-          if end_row = controller.isc_metadata[:endRow].to_i
-            end_row = [end_row, resource_count].min
-            xml.endRow end_row
-            filtered_resource = filtered_resource.limit(end_row - start_row)
-          end
+          start_row = (controller.isc_metadata[:startRow] || 0).to_i
+          xml.startRow start_row
+          filtered_resource = filtered_resource.offset(start_row)
+
+          # Apply the end row if present
+          end_row = (controller.isc_metadata[:endRow] || resource_count).to_i
+          end_row = [end_row, resource_count].min
+          xml.endRow end_row
+          filtered_resource = filtered_resource.limit(end_row - start_row)
+
+          # Write out the data
           xml.data do
             filtered_resource.each do |record|
               xml << record.to_isc(options[:to_isc])

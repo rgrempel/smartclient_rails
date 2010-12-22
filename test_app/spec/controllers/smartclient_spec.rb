@@ -142,5 +142,17 @@ describe ApplicationController do
       response.body.should match_xpath("/response/totalRows[text()=4]")
       response.body.should match_xpath("/response/data/record")
     end
+
+    it "should react correctly when no startRow and endRow specified" do
+      get :index, :format => "isc",
+                  :isc_metaDataPrefix => "_",
+                  :_operationType => "fetch"
+      response.should be_success
+      response.body.should match_xpath("/response/status[text()=0]")
+      response.body.should match_xpath("/response/startRow[text()=0]")
+      response.body.should match_xpath("/response/endRow[text()=4]")
+      response.body.should match_xpath("/response/totalRows[text()=4]")
+      response.body.should match_xpath("/response/data/record")
+    end
   end
 end
